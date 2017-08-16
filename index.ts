@@ -72,7 +72,7 @@ function createDefineReplaceRegExp(defines: Defines) {
 
 export default <loader.Loader> function processSource(source, sourceMap) {
   const options = loaderUtils.getOptions(this)
-  const defines: Defines = {}
+  const defines: Defines = options.defines || {}
   let outSource = ''
   const conditionalStack: ConditionalState[] = []
   let defineReplaceRegExp = createDefineReplaceRegExp(defines)
