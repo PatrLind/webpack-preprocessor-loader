@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    {
+        "type": "node",
+        "request": "attach",
+        "name": "Attach (Inspector Protocol)",
+        "port": 9229,
+        "protocol": "inspector"
+    },
+        {
+            "request": "launch",
+            "type": "node",
+            "name": "DEBUG",
+            "env": { "NODE_ENV": "development" },
+            "program": "${workspaceRoot}/build/index.js",
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true,
+            "outDir": "${workspaceRoot}/build"
+        },
+        {
+            "name": "Attach",
+            "type": "node",
+            "request": "attach",
+            "port": 5858
+        }
+    ]
+}

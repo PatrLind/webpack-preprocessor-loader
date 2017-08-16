@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "sourceMap": true,
+        "allowJs": false,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "baseUrl": "types",
+        "typeRoots": ["types"],
+        "outDir": "build",
+        "strict": true,
+        "lib": ["es5"]
+    }
+}
