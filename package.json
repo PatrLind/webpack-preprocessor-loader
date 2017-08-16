@@ -1,6 +1,6 @@
 {
   "name": "webpack-preprocessor-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Runs a C like preprocessor on files",
   "main": "build/index.js",
   "scripts": {

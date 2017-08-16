@@ -57,7 +57,7 @@ function createDefineReplaceRegExp(defines) {
 }
 exports.default = function processSource(source, sourceMap) {
     var options = loaderUtils.getOptions(this);
-    var defines = {};
+    var defines = options.defines || {};
     var outSource = '';
     var conditionalStack = [];
     var defineReplaceRegExp = createDefineReplaceRegExp(defines);
