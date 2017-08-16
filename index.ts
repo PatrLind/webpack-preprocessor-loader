@@ -50,7 +50,7 @@ interface ConditionalState {
   inElse: boolean
 }
 
-const DIRECTIVE_FIX = '//#'
+const DIRECTIVE_PREFIX = '//#'
 
 function checkIfShouldUseLine(conditionalStack: ConditionalState[]) {
   let useLine = true
@@ -83,8 +83,8 @@ export default <loader.Loader> function processSource(source, sourceMap) {
     const tLine = line.trim()
     const currCond = conditionalStack[conditionalStack.length - 1] || undefined
     const useLine = checkIfShouldUseLine(conditionalStack)
-  if (tLine.indexOf(DIRECTIVE_FIX) === 0) {
-      const directiveLine = tLine.substr(DIRECTIVE_FIX.length).trim()
+  if (tLine.indexOf(DIRECTIVE_PREFIX) === 0) {
+      const directiveLine = tLine.substr(DIRECTIVE_PREFIX.length).trim()
       const directiveLineParts = directiveLine.split(' ')
       const directive = directiveLineParts[0] || ''
       const param1 = directiveLineParts[1] || undefined

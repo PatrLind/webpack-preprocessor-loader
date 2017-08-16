@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *   ( dont use the backslashes :) )
  */
 var loaderUtils = require("loader-utils");
-var DIRECTIVE_FIX = '//#';
+var DIRECTIVE_PREFIX = '//#';
 function checkIfShouldUseLine(conditionalStack) {
     var useLine = true;
     for (var i = conditionalStack.length - 1; i >= 0; i--) {
@@ -67,8 +67,8 @@ exports.default = function processSource(source, sourceMap) {
         var tLine = line.trim();
         var currCond = conditionalStack[conditionalStack.length - 1] || undefined;
         var useLine = checkIfShouldUseLine(conditionalStack);
-        if (tLine.indexOf(DIRECTIVE_FIX) === 0) {
-            var directiveLine = tLine.substr(DIRECTIVE_FIX.length).trim();
+        if (tLine.indexOf(DIRECTIVE_PREFIX) === 0) {
+            var directiveLine = tLine.substr(DIRECTIVE_PREFIX.length).trim();
             var directiveLineParts = directiveLine.split(' ');
             var directive = directiveLineParts[0] || '';
             var param1 = directiveLineParts[1] || undefined;
