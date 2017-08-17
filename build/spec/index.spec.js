@@ -4,7 +4,8 @@ var index_1 = require("../index");
 var mockCtx = {
     callback: function (error) {
         throw error;
-    }
+    },
+    query: {}
 };
 describe('processSource function', function () {
     it('should throw on wrong directive', function () {
@@ -40,21 +41,21 @@ describe('processSource function', function () {
 });
 describe('processSource function', function () {
     it('should replace define value constants', function () {
-        var source = "\n      //#define M_PI 3.14159265358979323846\n      //#define MY_STR \"My Str\"\n      Pi is /*=M_PI*/\n      This is not defined: /*=NOT_DEFINED*/\n      var str = /*=MY_STR*/\n      //#ifdef MY_STR\n      Yes, the MY_STR is defined\n      //#endif\n      ";
+        var source = "\n      //#define M_PI 3.14159265358979323846\n      //#define MY_STR \"My Str\"\n      //#define EMPTY\n      Pi is M_PI\n      Pi is M_PI with characters after\n      Pi is not _M_PI_\n      This is not defined: NOT_DEFINED\n      var str = MY_STR\n      EMPTY\n      //#ifdef MY_STR\n      Yes, it is defined\n      //#endif\n      ";
         var result = index_1.default.call(mockCtx, source, '');
-        expect(result).toBe("\n      Pi is 3.14159265358979323846\n      This is not defined: /*=NOT_DEFINED*/\n      var str = \"My Str\"\n      Yes, the MY_STR is defined\n      ");
+        expect(result).toBe("\n      Pi is 3.14159265358979323846\n      Pi is 3.14159265358979323846 with characters after\n      Pi is not _M_PI_\n      This is not defined: NOT_DEFINED\n      var str = \"My Str\"\n      \n      Yes, it is defined\n      ");
     });
 });
 describe('processSource function', function () {
     it('should be able to undef a define', function () {
-        var source = "\n      //#define MY_STR \"My Str\"\n      var str = /*=MY_STR*/\n      //#undef MY_STR\n      //#ifdef MY_STR\n      Yes, the MY_STR is defined\n      //#else\n      MY_STR is not defined now\n      //#endif\n      ";
+        var source = "\n      //#define MY_STR \"My Str\"\n      var str = MY_STR\n      //#undef MY_STR\n      //#ifdef MY_STR\n      Yes, the MY_STR is defined\n      //#else\n      MY_STR is not defined now\n      //#endif\n      ";
         var result = index_1.default.call(mockCtx, source, '');
         expect(result).toBe("\n      var str = \"My Str\"\n      MY_STR is not defined now\n      ");
     });
 });
 describe('processSource function', function () {
     it('should be able to get ifndef to work', function () {
-        var source = "\n      //#define MY_STR \"My Str\"\n      var str = /*=MY_STR*/\n      //#undef MY_STR\n      //#ifndef MY_STR\n      MY_STR is not defined now\n      //#else\n      Yes, the MY_STR is defined\n      //#endif\n      ";
+        var source = "\n      //#define MY_STR \"My Str\"\n      var str = MY_STR\n      //#undef MY_STR\n      //#ifndef MY_STR\n      MY_STR is not defined now\n      //#else\n      Yes, the MY_STR is defined\n      //#endif\n      ";
         var result = index_1.default.call(mockCtx, source, '');
         expect(result).toBe("\n      var str = \"My Str\"\n      MY_STR is not defined now\n      ");
     });

@@ -34,8 +34,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *   define - Defines a define variable
  *   undef  - Undefines a define variable
  * To use define variable substitution use:
- *   \/*=DEFINED_VARIABLE_NAME*\/
- *   ( dont use the backslashes :) )
+ *   DEFINED_VARIABLE_NAME
+ * and it will be replaced with the value of the define variable
  */
 var loaderUtils = require("loader-utils");
 var DIRECTIVE_PREFIX = '//#';
@@ -52,7 +52,12 @@ function checkIfShouldUseLine(conditionalStack) {
 }
 function createDefineReplaceRegExp(defines) {
     var defKeys = Object.keys(defines);
-    var regExpStr = '\\/\\*=(' + defKeys.join('|') + ')\\*\\/';
+    // This is not really according to the ECMAScript standards
+    // The standard allows for unicode variable names
+    if (defKeys.length === 0) {
+        return;
+    }
+    var regExpStr = '([^a-zA-Z_\\$])(' + defKeys.join('|') + ')([^a-zA-Z0-9_\\$])?';
     return new RegExp(regExpStr, 'g');
 }
 exports.default = function processSource(source, sourceMap) {
@@ -130,7 +135,8 @@ exports.default = function processSource(source, sourceMap) {
         }
         else {
             if (useLine) {
-                var fixedLine = line.replace(defineReplaceRegExp, function (match, p1) { return defines[p1] || ''; });
+                var replacer = function (match, p1, p2, p3) { return p1 + (defines[p2] || '') + (p3 || ''); };
+                var fixedLine = defineReplaceRegExp ? line.replace(defineReplaceRegExp, replacer) : line;
                 outSource += fixedLine + (i < lines.length - 1 ? '\n' : '');
             }
         }

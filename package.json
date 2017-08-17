@@ -1,6 +1,6 @@
 {
   "name": "webpack-preprocessor-loader",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Runs a C like preprocessor on files",
   "main": "build/index.js",
   "scripts": {
@@ -8,15 +8,25 @@
   },
   "author": "Patrik Lindahl <patrik@ramnet.se>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ramzeus/webpack-preprocessor-loader.git"
+  },
+  "keywords": [
+    "webpack-loader",
+    "preprocessor",
+    "conditional-statements",
+    "nodejs"
+  ],
   "dependencies": {
+    "loader-utils": "^1.1.0"
+  },
+  "devDependencies": {
     "@types/loader-utils": "^1.1.0",
     "@types/node": "^8.0.22",
     "@types/webpack": "^3.0.9",
-    "loader-utils": "^1.1.0",
-    "typescript": "^2.4.2"
-  },
-  "devDependencies": {
     "@types/jasmine": "^2.5.53",
+    "typescript": "^2.4.2",
     "jasmine": "^2.7.0"
   }
 }
