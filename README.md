@@ -15,7 +15,7 @@ Supported directives:
 ```
 
 To use define variable substitution use:
-  `/*=DEFINED_VARIABLE_NAME*/`
+  `DEFINED_VARIABLE_NAME`
 
 I hope you will find this useful. If you have problems, please open an issue and I will try to help you as best I can.
 
@@ -36,7 +36,7 @@ options: {
 }
 ```
 
-## Example:
+### Configuration example:
 ```
 module: {
     rules: [
@@ -70,3 +70,25 @@ module: {
 }
 ```
 
+## Code example
+```
+//#ifdef PLATFORM_A
+import { stuff } from './platform-specific-code/platform_a'
+//#else
+import { other_stuff } from './platform-specific-code/platform_b'
+//#endif
+```
+```
+  //#ifdef __EXEC_ENV_BROWSER
+  const { PlatformHandlerBrowser } = await import("./browser/platform-handler-browser");
+  return new PlatformHandlerBrowser();
+  //#endif
+  //#ifdef __EXEC_ENV_NODE
+  const { PlatformHandlerNode } = await import('./node/platform-handler-node');
+  return new PlatformHandlerNode();
+  //#endif
+  //#ifdef __EXEC_ENV_QT
+  const { PlatformHandlerQt } = await import("./qt/platform-handler-qt");
+  return new PlatformHandlerQt();
+  //#endif
+  ```
