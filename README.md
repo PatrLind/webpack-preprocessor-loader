@@ -45,7 +45,7 @@ module: {
         loaders: [
           // In this example I use a typescript loader
           // The loaders are run in reverse order,
-          // so firtst the code will filter thru webpack-preprocessor-loader
+          // so first the code will filter thru webpack-preprocessor-loader
           // and the thru the typescript loader, or whatever you want to use
           {
             loader: 'awesome-typescript-loader',
