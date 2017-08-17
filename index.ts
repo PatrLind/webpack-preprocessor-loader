@@ -33,8 +33,8 @@
   *   define - Defines a define variable
   *   undef  - Undefines a define variable
   * To use define variable substitution use: 
-  *   \/*=DEFINED_VARIABLE_NAME*\/
-  *   ( dont use the backslashes :) )
+  *   DEFINED_VARIABLE_NAME
+  * and it will be replaced with the value of the define variable
   */
 
 import * as loaderUtils from 'loader-utils'
@@ -49,6 +49,8 @@ interface ConditionalState {
   condition: boolean
   inElse: boolean
 }
+
+type ReplaceFunc = (substring: string, ...args: any[]) => string
 
 const DIRECTIVE_PREFIX = '//#'
 
@@ -66,7 +68,12 @@ function checkIfShouldUseLine(conditionalStack: ConditionalState[]) {
 
 function createDefineReplaceRegExp(defines: Defines) {
   const defKeys = Object.keys(defines)
-  const regExpStr = '\\/\\*=(' + defKeys.join('|') + ')\\*\\/'
+  // This is not really according to the ECMAScript standards
+  // The standard allows for unicode variable names
+  if (defKeys.length === 0) {
+    return
+  }
+  const regExpStr = '([^a-zA-Z_\\$])(' + defKeys.join('|') + ')([^a-zA-Z0-9_\\$])?'
   return new RegExp(regExpStr, 'g')
 }
 
@@ -145,7 +152,8 @@ export default <loader.Loader> function processSource(source, sourceMap) {
       }
     } else {
       if (useLine) {
-        const fixedLine = line.replace(defineReplaceRegExp, (match, p1) => defines[p1] || '')
+        const replacer: ReplaceFunc = (match, p1, p2, p3) => p1 + (defines[p2] || '') + (p3 || '')
+        const fixedLine = defineReplaceRegExp ? line.replace(defineReplaceRegExp, replacer) : line
         outSource += fixedLine + (i < lines.length - 1 ? '\n' : '')
       }
     }
