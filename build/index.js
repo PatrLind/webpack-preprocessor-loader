@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 /** Webpack preprocessor loader
  *
  * Helps to disable parts of the code depending on preprocessor directives.
@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * and it will be replaced with the value of the define variable
  */
 var loaderUtils = require("loader-utils");
-var DIRECTIVE_PREFIX = '//#';
+var DIRECTIVE_REGEX = /^\/\/[ ]?#(.*)/;
 function checkIfShouldUseLine(conditionalStack) {
     var useLine = true;
     for (var i = conditionalStack.length - 1; i >= 0; i--) {
@@ -60,7 +60,7 @@ function createDefineReplaceRegExp(defines) {
     var regExpStr = '([^a-zA-Z_\\$])(' + defKeys.join('|') + ')([^a-zA-Z0-9_\\$])?';
     return new RegExp(regExpStr, 'g');
 }
-exports.default = function processSource(source, sourceMap) {
+exports["default"] = (function processSource(source, sourceMap) {
     var options = loaderUtils.getOptions(this);
     var defines = options.defines || {};
     var outSource = '';
@@ -72,8 +72,8 @@ exports.default = function processSource(source, sourceMap) {
         var tLine = line.trim();
         var currCond = conditionalStack[conditionalStack.length - 1] || undefined;
         var useLine = checkIfShouldUseLine(conditionalStack);
-        if (tLine.indexOf(DIRECTIVE_PREFIX) === 0) {
-            var directiveLine = tLine.substr(DIRECTIVE_PREFIX.length).trim();
+        if (DIRECTIVE_REGEX.test(tLine)) {
+            var directiveLine = tLine.match(DIRECTIVE_REGEX)[1].trim();
             var directiveLineParts = directiveLine.split(' ');
             var directive = directiveLineParts[0] || '';
             var param1 = directiveLineParts[1] || undefined;
@@ -83,7 +83,7 @@ exports.default = function processSource(source, sourceMap) {
                         conditionalStack.push({
                             directive: directive,
                             inElse: false,
-                            condition: defines[param1] !== undefined,
+                            condition: defines[param1] !== undefined
                         });
                     }
                     break;
@@ -93,7 +93,7 @@ exports.default = function processSource(source, sourceMap) {
                         conditionalStack.push({
                             directive: directive,
                             inElse: false,
-                            condition: defines[param1] === undefined,
+                            condition: defines[param1] === undefined
                         });
                     }
                     break;
@@ -142,5 +142,5 @@ exports.default = function processSource(source, sourceMap) {
         }
     }
     return outSource;
-};
+});
 //# sourceMappingURL=index.js.map
